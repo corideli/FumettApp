@@ -17,4 +17,5 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
     }
+
 }
