@@ -13,7 +13,7 @@
         android:theme="@style/Theme.FumettApp"
         tools:targetApi="31">
         <activity
-            android:name=".ActivityResulLauncher"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
     </application>
 
 </manifest>
