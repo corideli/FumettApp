@@ -23,13 +23,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        binding.textView.setOnClickListener {
+        binding.editTextTextEmailAddress.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-        binding.button3.setOnClickListener {
-            val email = binding.editTextText3.text.toString()
-            val pass = binding.editTextText4.text.toString()
+        binding.button4.setOnClickListener {
+            val email = binding.editTextTextEmailAddress.text.toString()
+            val pass = binding.editTextTextPassword.text.toString()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 
