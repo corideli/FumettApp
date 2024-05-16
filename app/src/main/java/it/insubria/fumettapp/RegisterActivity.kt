@@ -24,15 +24,15 @@ class RegisterActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.textView5.setOnClickListener {
+        binding.btnAccesso.setOnClickListener {
             val intent = Intent(this , LoginActivity::class.java)
             startActivity(intent)
         }
 
-        binding.button4.setOnClickListener{
-            val email = binding.textView5.text.toString()
-            val pass = binding.textView6.text.toString()
-            val confirmPass = binding.textView8.text.toString()
+        binding.Registrati.setOnClickListener{
+            val email = binding.Email.text.toString()
+            val pass = binding.password.text.toString()
+            val confirmPass = binding.psdConferma.text.toString()
 
             if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()){
                 if (pass == confirmPass){

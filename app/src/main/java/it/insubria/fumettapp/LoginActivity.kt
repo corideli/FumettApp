@@ -23,11 +23,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        binding.editTextTextEmailAddress.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+        binding.btnRegistrazione.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
-        binding.button4.setOnClickListener {
+        binding.btnAccedi.setOnClickListener {
             val email = binding.editTextTextEmailAddress.text.toString()
             val pass = binding.editTextTextPassword.text.toString()
 

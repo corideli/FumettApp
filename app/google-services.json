@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "733059877581",
+    "project_id": "fumettapp",
+    "storage_bucket": "fumettapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733059877581:android:b93f23501c581fb7be3784",
+        "android_client_info": {
+          "package_name": "it.insubria.fumettapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZfRn896eaFXypkbSrY2Lh863Zf2aSt48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
