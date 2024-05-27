@@ -19,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
+
         binding.btnRegistrazione.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
@@ -31,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
+                        val intent = Intent(this, HomeActivity::class.java)
                         startActivity(intent)
                     } else {
                         Toast.makeText(this, "Utente non registrato, verifica le credenziali", Toast.LENGTH_SHORT).show()
@@ -45,11 +46,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
     }

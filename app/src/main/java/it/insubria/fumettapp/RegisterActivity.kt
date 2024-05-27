@@ -51,10 +51,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(this , "Non sono ammessi campi vuoti!" , Toast.LENGTH_SHORT).show()
-
             }
-
-
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
