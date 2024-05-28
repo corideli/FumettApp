@@ -2,7 +2,6 @@ package it.insubria.fumettapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
 import android.content.Intent
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +23,13 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+
+        /* collegare il pulsante di password dimenticata a nuovo fragment che inv ia mail all'utente con campo di cambio psw
+        binding.btnPswDim.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }*/
+
         binding.btnAccedi.setOnClickListener {
             val email = binding.editTextTextEmailAddress.text.toString()
             val pass = binding.editTextTextPassword.text.toString()

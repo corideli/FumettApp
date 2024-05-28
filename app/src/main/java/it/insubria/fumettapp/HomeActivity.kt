@@ -1,25 +1,27 @@
 package it.insubria.fumettapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import it.insubria.fumettapp.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
-    //private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnLibreria.setOnClickListener{
-            val intent = Intent(this, LibraryActivity::class.java)
+        binding.btnAdd.setOnClickListener{
+            val intent = Intent(this, Libreria::class.java)
             startActivity(intent)
-        }*/
+        }
 
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
