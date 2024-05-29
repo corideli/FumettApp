@@ -8,4 +8,6 @@
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
     <string name="registrazione">Registrazione</string>
+    <string name="recupera_il_tuo_account">Recupera il tuo account</string>
+    <string name="inserire_mail">Inserire l\'indirizzo E-mail nel campo sottostante</string>
 </resources>

@@ -12,6 +12,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
@@ -51,10 +52,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        /* collegare il pulsante di password dimenticata a nuovo fragment che inv ia mail all'utente con campo di cambio psw*/
-        binding.btnPswDim.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+        val passwordDimenticata = PasswordDimenticata()
+        binding.btnPswDim.setOnClickListener{
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragment_password, passwordDimenticata)
+                commit()
+            }
         }
     }
 
