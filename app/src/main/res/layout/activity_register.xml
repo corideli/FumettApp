@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@drawable/sfondologin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/sfondologin"
     tools:context=".RegisterActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -121,34 +121,39 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/titoloR"
+        android:id="@+id/tvTitolo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:fontFamily="@font/honkregular"
-        android:text="FumettApp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="casual"
+        android:text="@string/titolo"
+        android:textColor="#6E4C10"
         android:textSize="48sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/reg"
+        android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registrazione"
-        android:textSize="20sp"
+        android:layout_marginTop="36dp"
+        android:text="@string/registrazione"
+        android:textSize="32sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titoloR" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitolo" />
 
     <Button
         android:id="@+id/Registrati"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#FFFFFF"
         android:text="Registrati"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
@@ -157,7 +162,9 @@
         android:id="@+id/btnAccesso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:text="Hai già un'Account? Accedi"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
