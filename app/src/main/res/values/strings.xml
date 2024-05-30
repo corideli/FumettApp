@@ -10,4 +10,6 @@
     <string name="registrazione">Registrazione</string>
     <string name="recupera_il_tuo_account">Recupera il tuo account</string>
     <string name="inserire_mail">Inserire l\'indirizzo E-mail nel campo sottostante</string>
+    <string name="conferma_password">Conferma Password</string>
+    <string name="nome_utente">Nome Utente</string>
 </resources>
