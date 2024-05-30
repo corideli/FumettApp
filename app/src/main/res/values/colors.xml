@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="fragment1">#166DEF</color>
-    <color name="fragment2">#47F607</color>
+    <color name="title">#653C0F</color>
     <color name="color_hint">#CC464646</color>
+
 
 </resources>
