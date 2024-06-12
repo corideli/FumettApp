@@ -1,5 +1,6 @@
 package it.insubria.fumettapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,11 +11,18 @@ import it.insubria.fumettapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-    private lateinit var dbHelper: ComicDatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        binding.btnLibreria.setOnClickListener{
+            val intent = Intent(this , LibraryActivity::class.java)
+            startActivity(intent)
+
+        }
 
         /*binding.fragment1Btn.setOnClickListener{
             replaceFragment()
@@ -23,28 +31,9 @@ class MainActivity : AppCompatActivity() {
         binding.fragment2Btn.setOnClickListener{
             replaceFragment()
         }*/
-
-        dbHelper = ComicDatabaseHelper(this)
-
-        // Esempio di aggiunta di un fumetto
-        val newComic =
-            Comic(title = "Batman", author = "Bob Kane", year = 1939, genre = "Superhero")
-        dbHelper.addComic(newComic)
-
-        // Esempio di recupero di tutti i fumetti
-        val comics = dbHelper.getAllComics()
-        comics.forEach {
-            println("Comic: ${it.title}, Author: ${it.author}")
-
-            enableEdgeToEdge()
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
-            }
-        }
     }
 }
+
     /*private fun replaceFragment(fragment : Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beingTransaction()

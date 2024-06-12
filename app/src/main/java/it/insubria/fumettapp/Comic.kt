@@ -1,4 +1,4 @@
-package it.insubria.fumettapp
+/*package it.insubria.fumettapp
 
 //Classe per rappresentare un fumetto.
 
@@ -7,5 +7,6 @@ data class Comic(
     val title: String,
     val author: String,
     val year: Int,
+    val pages: Int,
     val genre: String
-)
+)*/

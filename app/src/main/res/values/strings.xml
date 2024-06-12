@@ -12,4 +12,6 @@
     <string name="inserire_mail">Inserire l\'indirizzo E-mail nel campo sottostante</string>
     <string name="conferma_password">Conferma Password</string>
     <string name="nome_utente">Nome Utente</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

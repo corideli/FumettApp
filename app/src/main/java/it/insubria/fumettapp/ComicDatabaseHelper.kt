@@ -1,4 +1,4 @@
-package it.insubria.fumettapp
+/*package it.insubria.fumettapp
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -17,10 +17,11 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
         private const val TABLE_COMICS = "comics"
         private const val COLUMN_ID = "_id"
-        private const val COLUMN_TITLE = "title"
-        private const val COLUMN_AUTHOR = "author"
-        private const val COLUMN_YEAR = "year"
-        private const val COLUMN_GENRE = "genre"
+        private const val COLUMN_TITLE = "Titolo"
+        private const val COLUMN_AUTHOR = "Autore"
+        private const val COLUMN_YEAR = "Anno"
+        private const val COLUMN_GENRE = "Genere"
+        private const val COLUMN_PAGES = "Pagine"
 
         private const val TABLE_CREATE =
             "CREATE TABLE $TABLE_COMICS (" +
@@ -28,6 +29,7 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_TITLE TEXT NOT NULL, " +
                     "$COLUMN_AUTHOR TEXT NOT NULL, " +
                     "$COLUMN_YEAR INTEGER NOT NULL, " +
+                    "$COLUMN_PAGES INTEGER NOT NULL, " +
                     "$COLUMN_GENRE TEXT NOT NULL);"
     }
 
@@ -47,6 +49,7 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_TITLE, comic.title)
             put(COLUMN_AUTHOR, comic.author)
             put(COLUMN_YEAR, comic.year)
+            put(COLUMN_PAGES, comic.pages)
             put(COLUMN_GENRE, comic.genre)
         }
 
@@ -68,6 +71,7 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                     title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)),
                     author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR)),
                     year = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR)),
+                    pages = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PAGES)),
                     genre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE))
                 )
                 comics.add(comic)
@@ -84,6 +88,7 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_TITLE, comic.title)
             put(COLUMN_AUTHOR, comic.author)
             put(COLUMN_YEAR, comic.year)
+            put(COLUMN_PAGES, comic.pages)
             put(COLUMN_GENRE, comic.genre)
         }
 
@@ -99,4 +104,4 @@ class ComicDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         db.close()
         return result
     }
-}
+}*/
