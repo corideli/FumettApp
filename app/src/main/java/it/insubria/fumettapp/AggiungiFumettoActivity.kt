@@ -42,6 +42,7 @@ class AddActivity : AppCompatActivity() {
 }*/
 package it.insubria.fumettapp
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -105,11 +106,11 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val result = databaseHelper.insertFumetto(nuovoFumetto)
             if (result != -1L) {
                 Toast.makeText(this, "Fumetto salvato con successo", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
+                finish()
             } else {
                 Toast.makeText(this, "Errore nel salvataggio", Toast.LENGTH_SHORT).show()
             }
-
-            finish()
         }
 
         btnAggiorna.setOnClickListener {
@@ -133,12 +134,11 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val result = databaseHelper.updateFumetto(fumettoAggiornato)
             if (result > 0) {
                 Toast.makeText(this, "Fumetto aggiornato con successo", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
+                finish()
             } else {
                 Toast.makeText(this, "Errore nell'aggiornamento", Toast.LENGTH_SHORT).show()
             }
-
-            // Tornare alla MainActivity o visualizzare un messaggio di successo
-            finish()
         }
     }
 }

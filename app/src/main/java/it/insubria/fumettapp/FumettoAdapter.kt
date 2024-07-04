@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class FumettoAdapter(private val fumetti: List<Fumetto>, private val onItemClick: (Fumetto) -> Unit) : RecyclerView.Adapter<FumettoAdapter.FumettoViewHolder>() {
+class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick: (Fumetto) -> Unit) : RecyclerView.Adapter<FumettoAdapter.FumettoViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FumettoViewHolder {
@@ -29,6 +29,11 @@ class FumettoAdapter(private val fumetti: List<Fumetto>, private val onItemClick
     }
 
     override fun getItemCount() = fumetti.size
+
+    fun updateFumetti(newFumetti: List<Fumetto>) {
+        fumetti = newFumetti
+        notifyDataSetChanged()
+    }
 
     class FumettoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titoloFumetto: TextView = itemView.findViewById(R.id.titoloFumetto)
