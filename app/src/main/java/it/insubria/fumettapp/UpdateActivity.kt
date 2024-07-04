@@ -1,12 +1,8 @@
-package it.insubria.fumettapp
+/*package it.insubria.fumettapp
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -47,11 +43,17 @@ class UpdateActivity : AppCompatActivity() {
 
         updateButton.setOnClickListener {
             // And only then we call this
-            val myDB = MyDatabaseHelper(this@UpdateActivity)
-            title = titleInput.text.toString().trim()
-            author = authorInput.text.toString().trim()
-            pages = pagesInput.text.toString().trim()
-            myDB.updateData(id!!, title!!, author!!, pages!!)
+            val myDB = DatabaseHelper(this@UpdateActivity)
+            val titolo = etTitolo.text.toString()
+            val autore = etAutore.text.toString()
+            val numeroPagine = etNumeroPagine.text.toString().toIntOrNull() ?: 0
+            val stato = when (rgStato.checkedRadioButtonId) {
+                R.id.rbPresente -> Stato.PRESENTE
+                R.id.rbPrenotazione -> Stato.PRENOTAZIONE
+                R.id.rbMancante -> Stato.MANCANTE
+                else -> Stato.PRESENTE
+            }
+            myDB.updateFumetto(Fumetto(id = fumettoId, titolo = titolo, autore = autore, numeroPagine = numeroPagine, stato = stato))
         }
         deleteButton.setOnClickListener {
             confirmDialog()
@@ -83,11 +85,11 @@ class UpdateActivity : AppCompatActivity() {
         builder.setTitle("Delete $title ?")
         builder.setMessage("Are you sure you want to delete $title ?")
         builder.setPositiveButton("Yes") { _, _ ->
-            val myDB = MyDatabaseHelper(this@UpdateActivity)
+            val myDB = DatabaseHelper(this@UpdateActivity)
             myDB.deleteOneRow(id!!)
             finish()
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.create().show()
     }
-}
+}*/

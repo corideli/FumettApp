@@ -19,7 +19,7 @@
             android:name=".LibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".AddActivity"
+            android:name=".AggiungiFumettoActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

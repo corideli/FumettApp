@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etTitolo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Titolo" />
+
+        <EditText
+            android:id="@+id/etAutore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Autore" />
+
+        <EditText
+            android:id="@+id/etNumeroPagine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Numero di Pagine"
+            android:inputType="number" />
+
+        <RadioGroup
+            android:id="@+id/rgStato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rbPresente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Presente" />
+
+                <RadioButton
+                    android:id="@+id/rbPrenotazione"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="In prenotazione" />
+
+                <RadioButton
+                    android:id="@+id/rbMancante"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mancante" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSalva"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salva" />
+
+        <Button
+            android:id="@+id/btnAggiorna"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aggiorna"
+            android:visibility="gone" />
+
+</LinearLayout>
