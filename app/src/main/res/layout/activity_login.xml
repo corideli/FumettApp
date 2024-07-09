@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/sfondologin"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    tools:context=".accesso.LoginActivity">
 
     <TextView
         android:id="@+id/tvTitolo"
@@ -147,7 +147,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_password"
-        android:name="it.insubria.fumettapp.PasswordDimenticata"
+        android:name="it.insubria.fumettapp.accesso.PasswordDimenticata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout= "@layout/fragment_password_dimenticata" />

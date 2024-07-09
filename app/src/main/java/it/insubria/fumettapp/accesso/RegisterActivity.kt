@@ -1,4 +1,4 @@
-package it.insubria.fumettapp
+package it.insubria.fumettapp.accesso
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import it.insubria.fumettapp.R
 import it.insubria.fumettapp.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {

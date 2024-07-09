@@ -1,17 +1,13 @@
 package it.insubria.fumettapp
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-
-class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick: (Fumetto) -> Unit) : RecyclerView.Adapter<FumettoAdapter.FumettoViewHolder>() {
+//Aggiungere activity/fragment per l'apertura dettagli fumetto al click
+class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick: (Fumetto) -> Unit, private val onItemLongClick: (Fumetto) -> Unit) : RecyclerView.Adapter<FumettoAdapter.FumettoViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FumettoViewHolder {
@@ -25,6 +21,10 @@ class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick
         holder.bind(fumetto)
         holder.itemView.setOnClickListener {
             onItemClick(fumetto)
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(fumetto)
+            true
         }
     }
 

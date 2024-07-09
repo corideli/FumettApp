@@ -13,6 +13,12 @@
         android:theme="@style/Base.Theme.FumettApp"
         tools:targetApi="31">
         <activity
+            android:name=".DesideriActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CercaActivity"
+            android:exported="false" />
+        <activity
             android:name=".UpdateActivity"
             android:exported="false" />
         <activity
@@ -25,10 +31,10 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".accesso.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".accesso.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
