@@ -117,6 +117,27 @@ class DatabaseHelper(context: Context) :
         return db.delete(TABLE_FUMETTI, "$COLUMN_ID=?", arrayOf(fumettoId.toString()))
     }
 
+    fun searchFumetti(searchTerm: String): List<Fumetto> {
+        val fumetti = mutableListOf<Fumetto>()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_TITOLO LIKE '%$searchTerm%' OR $COLUMN_AUTORE LIKE '%$searchTerm%'"
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+            val titolo = cursor.getString(cursor.getColumnIndex(COLUMN_TITOLO))
+            val autore = cursor.getString(cursor.getColumnIndex(COLUMN_AUTORE))
+            val numeroPagine = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMERO_PAGINE))
+            val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_STATO)))
+
+            val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato)
+            fumetti.add(fumetto)
+        }
+
+        cursor.close()
+        return fumetti
+    }
+
 
     /*fun deleteAllData() {
         val db = this.writableDatabase

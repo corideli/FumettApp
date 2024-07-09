@@ -8,7 +8,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 //Aggiungere activity/fragment per l'apertura dettagli fumetto al click
 class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick: (Fumetto) -> Unit, private val onItemLongClick: (Fumetto) -> Unit) : RecyclerView.Adapter<FumettoAdapter.FumettoViewHolder>() {
-
+    constructor(fumetti: List<Fumetto>) : this(
+        fumetti,
+        {}, // Default empty onItemClick lambda
+        {}  // Default empty onItemLongClick lambda
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FumettoViewHolder {
         val itemView =
@@ -34,6 +38,7 @@ class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick
         fumetti = newFumetti
         notifyDataSetChanged()
     }
+
 
     class FumettoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titoloFumetto: TextView = itemView.findViewById(R.id.titoloFumetto)
