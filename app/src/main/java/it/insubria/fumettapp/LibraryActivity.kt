@@ -27,7 +27,11 @@ class LibraryActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId = R.id.nav_home
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> true
+                R.id.nav_home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 R.id.nav_favorites -> {
                     val intent = Intent(this, PreferitiActivity::class.java)
                     startActivity(intent)
@@ -49,8 +53,9 @@ class LibraryActivity : AppCompatActivity() {
         super.onResume()
         // Assicurati che l'item corretto sia selezionato
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.nav_home
+        bottomNavigationView.selectedItemId = 0 // Imposta selectedItemId a 0 per deselezionare tutti gli item
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

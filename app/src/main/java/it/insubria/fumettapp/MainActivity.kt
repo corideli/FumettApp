@@ -17,22 +17,19 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    // Rimanere sulla Home
+                    // Rimani sulla Home, quindi non fare nulla
                     true
                 }
-
                 R.id.nav_favorites -> {
                     val intent = Intent(this, PreferitiActivity::class.java)
                     startActivity(intent)
                     true
                 }
-
                 R.id.nav_add -> {
                     val intent = Intent(this, AggiungiFumettoActivity::class.java)
                     startActivity(intent)
                     true
                 }
-
                 else -> false
             }
         }
