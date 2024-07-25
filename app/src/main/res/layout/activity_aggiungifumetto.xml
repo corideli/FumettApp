@@ -23,6 +23,11 @@
             android:layout_height="wrap_content"
             android:hint="Numero di Pagine"
             android:inputType="number" />
+        <EditText
+            android:id="@+id/etCollana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Collana/Serie" />
 
         <RadioGroup
             android:id="@+id/rgStato"

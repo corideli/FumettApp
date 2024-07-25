@@ -13,7 +13,8 @@ class LibraryActivity : AppCompatActivity() {
 
     private lateinit var databaseHelper: DatabaseHelper
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: FumettoAdapter
+    private lateinit var collanaAdapter: CollanaAdapter
+    private lateinit var fumettoAdapter: FumettoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +47,23 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
 
-        // Carica i dati dal database e aggiorna l'Adapter
-        loadFumettiFromDatabase()
+        collanaAdapter = CollanaAdapter(emptyList()) { collana ->
+            mostraFumettiPerCollana(collana)
+        }
+        recyclerView.adapter = collanaAdapter
+
+        // Carica le collane dal database
+        loadCollaneFromDatabase()
+    }
+    private fun loadCollaneFromDatabase() {
+        val collane = databaseHelper.getAllCollane()
+        collanaAdapter.updateCollane(collane)
+    }
+
+    private fun mostraFumettiPerCollana(collana: String) {
+        val fumetti = databaseHelper.getFumettiPerCollana(collana)
+        fumettoAdapter = FumettoAdapter(fumetti, { /* onItemClick */ }, { /* onItemLongClick */ })
+        recyclerView.adapter = fumettoAdapter
     }
     override fun onResume() {
         super.onResume()
@@ -71,10 +87,10 @@ class LibraryActivity : AppCompatActivity() {
 
     private fun loadFumettiFromDatabase() {
         val fumetti = databaseHelper.getAllFumetti()
-        if (::adapter.isInitialized) {
-            adapter.updateFumetti(fumetti)
+        if (::fumettoAdapter.isInitialized) {
+            fumettoAdapter.updateFumetti(fumetti)
         } else {
-            adapter = FumettoAdapter(fumetti,
+            fumettoAdapter = FumettoAdapter(fumetti,
                 onItemClick = { fumetto ->
                     // Gestisci il click semplice qui, se necessario
                 },
@@ -82,7 +98,7 @@ class LibraryActivity : AppCompatActivity() {
                     mostraDialogoOpzioni(fumetto)
                 }
             )
-            recyclerView.adapter = adapter
+            recyclerView.adapter = fumettoAdapter
         }
     }
 

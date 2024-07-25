@@ -66,8 +66,10 @@ class AggiungiFumettoActivity : AppCompatActivity() {
         val etAutore: EditText = findViewById(R.id.etAutore)
         val etNumeroPagine: EditText = findViewById(R.id.etNumeroPagine)
         val rgStato: RadioGroup = findViewById(R.id.rgStato)
+        val etCollana: EditText = findViewById(R.id.etCollana)
         val btnSalva: Button = findViewById(R.id.btnSalva)
         val btnAggiorna: Button = findViewById(R.id.btnAggiorna)
+
 
         fumettoId = intent.getLongExtra("fumetto_id", -1)
         if (fumettoId != -1L) {
@@ -76,6 +78,7 @@ class AggiungiFumettoActivity : AppCompatActivity() {
                 etTitolo.setText(it.titolo)
                 etAutore.setText(it.autore)
                 etNumeroPagine.setText(it.numeroPagine.toString())
+                etCollana.setText(it.collana)
                 when (it.stato) {
                     Stato.PRESENTE -> rgStato.check(R.id.rbPresente)
                     Stato.PRENOTAZIONE -> rgStato.check(R.id.rbPrenotazione)
@@ -90,6 +93,7 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val titolo = etTitolo.text.toString()
             val autore = etAutore.text.toString()
             val numeroPagine = etNumeroPagine.text.toString().toIntOrNull() ?: 0
+            val collana = etCollana.text.toString()
             val stato = when (rgStato.checkedRadioButtonId) {
                 R.id.rbPresente -> Stato.PRESENTE
                 R.id.rbPrenotazione -> Stato.PRENOTAZIONE
@@ -101,7 +105,8 @@ class AggiungiFumettoActivity : AppCompatActivity() {
                 titolo = titolo,
                 autore = autore,
                 numeroPagine = numeroPagine,
-                stato = stato
+                stato = stato,
+                collana = collana
             )
             val result = databaseHelper.insertFumetto(nuovoFumetto)
             if (result != -1L) {
@@ -117,6 +122,7 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val titolo = etTitolo.text.toString()
             val autore = etAutore.text.toString()
             val numeroPagine = etNumeroPagine.text.toString().toIntOrNull() ?: 0
+            val collana = etCollana.text.toString()
             val stato = when (rgStato.checkedRadioButtonId) {
                 R.id.rbPresente -> Stato.PRESENTE
                 R.id.rbPrenotazione -> Stato.PRENOTAZIONE
@@ -129,7 +135,8 @@ class AggiungiFumettoActivity : AppCompatActivity() {
                 titolo = titolo,
                 autore = autore,
                 numeroPagine = numeroPagine,
-                stato = stato
+                stato = stato,
+                collana = collana
             )
             val result = databaseHelper.updateFumetto(fumettoAggiornato)
             if (result > 0) {

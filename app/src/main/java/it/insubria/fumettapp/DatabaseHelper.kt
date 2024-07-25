@@ -18,6 +18,7 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_AUTORE = "autore"
         const val COLUMN_NUMERO_PAGINE = "numero_pagine"
         const val COLUMN_STATO = "stato"
+        const val COLUMN_COLLANA = "collana"
 
         private const val TABLE_CREATE =
             "CREATE TABLE $TABLE_FUMETTI (" +
@@ -25,7 +26,8 @@ class DatabaseHelper(context: Context) :
                     "$COLUMN_TITOLO TEXT, " +
                     "$COLUMN_AUTORE TEXT, " +
                     "$COLUMN_NUMERO_PAGINE INTEGER, " +
-                    "$COLUMN_STATO TEXT)"
+                    "$COLUMN_STATO TEXT," +
+                    "$COLUMN_COLLANA TEXT)"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -46,6 +48,7 @@ class DatabaseHelper(context: Context) :
             put(COLUMN_AUTORE, fumetto.autore)
             put(COLUMN_NUMERO_PAGINE, fumetto.numeroPagine)
             put(COLUMN_STATO, fumetto.stato.name)
+            put(COLUMN_COLLANA, fumetto.collana)
         }
         return db.insert(TABLE_FUMETTI, null, contentValues)
     }
@@ -60,9 +63,9 @@ class DatabaseHelper(context: Context) :
                 val titolo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITOLO))
                 val autore = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTORE))
                 val numeroPagine = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMERO_PAGINE))
-                val stato =
-                    Stato.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATO)))
-                val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato)
+                val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATO)))
+                val collana = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLLANA))
+                val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato, collana)
                 fumetti.add(fumetto)
             } while (cursor.moveToNext())
         }
@@ -79,6 +82,7 @@ class DatabaseHelper(context: Context) :
             put(COLUMN_AUTORE, fumetto.autore)
             put(COLUMN_NUMERO_PAGINE, fumetto.numeroPagine)
             put(COLUMN_STATO, fumetto.stato.name)
+            put(COLUMN_COLLANA, fumetto.collana)
         }
         return db.update(
             TABLE_FUMETTI,
@@ -104,8 +108,9 @@ class DatabaseHelper(context: Context) :
             val autore = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTORE))
             val numeroPagine = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMERO_PAGINE))
             val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATO)))
+            val collana = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLLANA))
             cursor.close()
-            Fumetto(id, titolo, autore, numeroPagine, stato)
+            Fumetto(id, titolo, autore, numeroPagine, stato, collana)
         } else {
             cursor.close()
             null
@@ -129,8 +134,8 @@ class DatabaseHelper(context: Context) :
             val autore = cursor.getString(cursor.getColumnIndex(COLUMN_AUTORE))
             val numeroPagine = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMERO_PAGINE))
             val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_STATO)))
-
-            val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato)
+            val collana = cursor.getString(cursor.getColumnIndex(COLUMN_COLLANA))
+            val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato, collana)
             fumetti.add(fumetto)
         }
 
@@ -138,10 +143,40 @@ class DatabaseHelper(context: Context) :
         return fumetti
     }
 
+    fun getAllCollane(): List<String> {
+        val collane = mutableListOf<String>()
+        val db = this.readableDatabase
+        val query = "SELECT DISTINCT collana FROM $TABLE_FUMETTI"
+        val cursor = db.rawQuery(query, null)
 
-    /*fun deleteAllData() {
-        val db = this.writableDatabase
-        db.execSQL("DELETE FROM $TABLE_NAME")
-    }*/
+        while (cursor.moveToNext()) {
+            val collana = cursor.getString(cursor.getColumnIndex("collana"))
+            collane.add(collana)
+        }
+
+        cursor.close()
+        return collane
+    }
+
+    fun getFumettiPerCollana(collana: String): List<Fumetto> {
+        val fumetti = mutableListOf<Fumetto>()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FUMETTI WHERE collana = ?"
+        val cursor = db.rawQuery(query, arrayOf(collana))
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+            val titolo = cursor.getString(cursor.getColumnIndex(COLUMN_TITOLO))
+            val autore = cursor.getString(cursor.getColumnIndex(COLUMN_AUTORE))
+            val numeroPagine = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMERO_PAGINE))
+            val stato = cursor.getString(cursor.getColumnIndex(COLUMN_STATO))
+
+            val fumetto = Fumetto(id, titolo, autore, numeroPagine, Stato.valueOf(stato), collana)
+            fumetti.add(fumetto)
+        }
+
+        cursor.close()
+        return fumetti
+    }
 }
 

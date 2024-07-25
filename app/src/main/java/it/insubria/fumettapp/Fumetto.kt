@@ -7,7 +7,8 @@ data class Fumetto(
     val titolo: String,
     val autore: String,
     val numeroPagine: Int,
-    var stato: Stato
+    var stato: Stato,
+    var collana: String
 )
 
 enum class Stato {
