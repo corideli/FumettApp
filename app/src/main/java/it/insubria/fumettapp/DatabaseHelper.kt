@@ -1,5 +1,6 @@
 package it.insubria.fumettapp
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -122,6 +123,7 @@ class DatabaseHelper(context: Context) :
         return db.delete(TABLE_FUMETTI, "$COLUMN_ID=?", arrayOf(fumettoId.toString()))
     }
 
+    @SuppressLint("Range")
     fun searchFumetti(searchTerm: String): List<Fumetto> {
         val fumetti = mutableListOf<Fumetto>()
         val db = this.readableDatabase
@@ -143,6 +145,7 @@ class DatabaseHelper(context: Context) :
         return fumetti
     }
 
+    @SuppressLint("Range")
     fun getAllCollane(): List<String> {
         val collane = mutableListOf<String>()
         val db = this.readableDatabase
@@ -158,6 +161,7 @@ class DatabaseHelper(context: Context) :
         return collane
     }
 
+    @SuppressLint("Range")
     fun getFumettiPerCollana(collana: String): List<Fumetto> {
         val fumetti = mutableListOf<Fumetto>()
         val db = this.readableDatabase
@@ -178,5 +182,28 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return fumetti
     }
+
+    @SuppressLint("Range")
+    fun getFumettiMancanti(): List<Fumetto> {
+        val fumetti = mutableListOf<Fumetto>()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_STATO = ?"
+        val cursor = db.rawQuery(query, arrayOf(Stato.MANCANTE.name))
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+            val titolo = cursor.getString(cursor.getColumnIndex(COLUMN_TITOLO))
+            val autore = cursor.getString(cursor.getColumnIndex(COLUMN_AUTORE))
+            val numeroPagine = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMERO_PAGINE))
+            val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_STATO)))
+            val collana = cursor.getString(cursor.getColumnIndex(COLUMN_COLLANA))
+            val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato, collana)
+            fumetti.add(fumetto)
+        }
+
+        cursor.close()
+        return fumetti
+    }
+
 }
 
