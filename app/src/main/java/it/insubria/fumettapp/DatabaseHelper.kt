@@ -5,11 +5,17 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
+
         private const val DATABASE_NAME = "fumetti.db"
         private const val DATABASE_VERSION = 1
 
@@ -29,6 +35,38 @@ class DatabaseHelper(context: Context) :
                     "$COLUMN_NUMERO_PAGINE INTEGER, " +
                     "$COLUMN_STATO TEXT," +
                     "$COLUMN_COLLANA TEXT)"
+
+        fun backupDatabase(context: Context, backupFileName: String) {
+            val dbHelper = DatabaseHelper(context)
+            val db = dbHelper.readableDatabase
+            val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_FUMETTI}", null)
+
+            val backupFile = File(context.getExternalFilesDir(null), backupFileName)
+            val writer = BufferedWriter(FileWriter(backupFile))
+
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        val id = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+                        val titolo = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITOLO))
+                        val autore = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_AUTORE))
+                        val numeroPagine = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NUMERO_PAGINE))
+                        val stato = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STATO))
+                        val collana = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COLLANA))
+
+                        // Scrittura dei dati nel file di backup in formato CSV
+                        writer.write("$id,$titolo,$autore,$numeroPagine,$stato,$collana\n")
+
+                    } while (cursor.moveToNext())
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } finally {
+                writer.close()
+                cursor.close()
+                db.close()
+            }
+        }
     }
 
     override fun onCreate(db: SQLiteDatabase) {

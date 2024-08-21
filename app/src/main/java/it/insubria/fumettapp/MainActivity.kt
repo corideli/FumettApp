@@ -20,16 +20,19 @@ class MainActivity : AppCompatActivity() {
                     // Rimani sulla Home, quindi non fare nulla
                     true
                 }
+
                 R.id.nav_favorites -> {
                     val intent = Intent(this, PreferitiActivity::class.java)
                     startActivity(intent)
                     true
                 }
+
                 R.id.nav_add -> {
                     val intent = Intent(this, AggiungiFumettoActivity::class.java)
                     startActivity(intent)
                     true
                 }
+
                 else -> false
             }
         }
@@ -37,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         val btnLibreria: Button = findViewById(R.id.btnLibreria)
         val btnCerca: Button = findViewById(R.id.btnCerca)
         val btnDesideri: Button = findViewById(R.id.btnDesideri)
+        val backupButton: Button = findViewById(R.id.backupButton)
+
 
         btnLibreria.setOnClickListener {
             val intent = Intent(this, LibraryActivity::class.java)
@@ -52,12 +57,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, DesideriActivity::class.java)
             startActivity(intent)
         }
+        backupButton.setOnClickListener {
+            // Esegui il backup
+            DatabaseHelper.backupDatabase(this, "backup_fumetti.csv")
+        }
     }
-
     override fun onResume() {
         super.onResume()
         // Assicurati che l'item corretto sia selezionato
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_home
     }
+
 }
