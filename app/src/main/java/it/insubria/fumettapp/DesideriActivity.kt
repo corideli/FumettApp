@@ -24,7 +24,7 @@ class DesideriActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.nav_home
+        bottomNavigationView.selectedItemId = 0
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -74,7 +74,7 @@ class DesideriActivity : AppCompatActivity() {
 
         // Assicurati che l'item corretto sia selezionato
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.nav_home
+        bottomNavigationView.selectedItemId = 0
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

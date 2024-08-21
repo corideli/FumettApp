@@ -62,7 +62,13 @@ class LibraryActivity : AppCompatActivity() {
 
     private fun mostraFumettiPerCollana(collana: String) {
         val fumetti = databaseHelper.getFumettiPerCollana(collana)
-        fumettoAdapter = FumettoAdapter(fumetti, { /* onItemClick */ }, { /* onItemLongClick */ })
+        fumettoAdapter = FumettoAdapter(fumetti, onItemClick = { fumetto ->
+            // Gestisci il click semplice qui, se necessario
+        },
+            onItemLongClick = { fumetto ->
+                mostraDialogoOpzioni(fumetto)
+            }
+        )
         recyclerView.adapter = fumettoAdapter
     }
     override fun onResume() {

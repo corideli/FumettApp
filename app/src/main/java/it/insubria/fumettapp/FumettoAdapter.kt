@@ -1,5 +1,6 @@
 package it.insubria.fumettapp
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class FumettoAdapter(private var fumetti: List<Fumetto>, private val onItemClick
             true
         }
     }
+
 
     override fun getItemCount() = fumetti.size
 
