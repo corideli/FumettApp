@@ -17,7 +17,7 @@ class DesideriActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_library)
+        setContentView(R.layout.activity_desideri)
 
         databaseHelper = DatabaseHelper(this)
         recyclerView = findViewById(R.id.recyclerView)
