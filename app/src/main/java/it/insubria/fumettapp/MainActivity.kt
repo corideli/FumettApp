@@ -1,17 +1,36 @@
 package it.insubria.fumettapp
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.insubria.fumettapp.DatabaseHelper.Companion.TABLE_FUMETTI
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_ID
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_TITOLO
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_AUTORE
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_STATO
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_COLLANA
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_NUMERO_PAGINE
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        const val REQUEST_CODE_CREATE_FILE = 1
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val dbHelper = DatabaseHelper(this)
+
+        // Creazione di un backup
+        dbHelper.createBackup(this)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -58,10 +77,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         backupButton.setOnClickListener {
-            // Esegui il backup
-            DatabaseHelper.backupDatabase(this, "backup_fumetti.csv")
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/csv"
+                putExtra(Intent.EXTRA_TITLE, "backup.csv")
+            }
+            startActivityForResult(intent, REQUEST_CODE_CREATE_FILE)
         }
+
     }
+
     override fun onResume() {
         super.onResume()
         // Assicurati che l'item corretto sia selezionato
@@ -69,4 +94,41 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId = R.id.nav_home
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_CREATE_FILE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                saveBackupToUri(uri)
+            }
+        }
+    }
+    private fun saveBackupToUri(uri: Uri) {
+        val db = DatabaseHelper(this).readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_FUMETTI", null)
+
+        try {
+            contentResolver.openOutputStream(uri)?.use { outputStream ->
+                val writer = outputStream.bufferedWriter()
+
+                writer.use {
+                    it.write("id,titolo,autore,numero_pagine,stato,collana\n")
+                    while (cursor.moveToNext()) {
+                        val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                        val titolo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITOLO))
+                        val autore = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTORE))
+                        val numeroPagine = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMERO_PAGINE))
+                        val stato = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATO))
+                        val collana = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLLANA))
+                        it.write("$id,$titolo,$autore,$numeroPagine,$stato,$collana\n")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+            db.close()
+        }
+}
 }

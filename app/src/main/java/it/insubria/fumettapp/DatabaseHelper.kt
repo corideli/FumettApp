@@ -5,10 +5,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.io.BufferedWriter
+import android.os.Environment
 import java.io.File
 import java.io.FileWriter
-import java.io.IOException
 
 
 class DatabaseHelper(context: Context) :
@@ -35,38 +34,6 @@ class DatabaseHelper(context: Context) :
                     "$COLUMN_NUMERO_PAGINE INTEGER, " +
                     "$COLUMN_STATO TEXT," +
                     "$COLUMN_COLLANA TEXT)"
-
-        fun backupDatabase(context: Context, backupFileName: String) {
-            val dbHelper = DatabaseHelper(context)
-            val db = dbHelper.readableDatabase
-            val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_FUMETTI}", null)
-
-            val backupFile = File(context.getExternalFilesDir(null), backupFileName)
-            val writer = BufferedWriter(FileWriter(backupFile))
-
-            try {
-                if (cursor.moveToFirst()) {
-                    do {
-                        val id = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
-                        val titolo = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITOLO))
-                        val autore = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_AUTORE))
-                        val numeroPagine = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NUMERO_PAGINE))
-                        val stato = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STATO))
-                        val collana = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COLLANA))
-
-                        // Scrittura dei dati nel file di backup in formato CSV
-                        writer.write("$id,$titolo,$autore,$numeroPagine,$stato,$collana\n")
-
-                    } while (cursor.moveToNext())
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } finally {
-                writer.close()
-                cursor.close()
-                db.close()
-            }
-        }
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -242,6 +209,29 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return fumetti
     }
+    fun createBackup(context: Context) {
+        val db = this.readableDatabase
 
+        // Estrai i dati
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_FUMETTI", null)
+        val backupFile = File(context.filesDir, "backup.csv")
+        val writer = FileWriter(backupFile)
+
+        writer.use {
+            // Scrivi l'intestazione del CSV
+            it.write("id,titolo,autore,numero_pagine,stato,collana\n")
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val titolo = cursor.getString(cursor.getColumnIndex(COLUMN_TITOLO))
+                val autore = cursor.getString(cursor.getColumnIndex(COLUMN_AUTORE))
+                val numeroPagine = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMERO_PAGINE))
+                val stato = Stato.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_STATO)))
+                val collana = cursor.getString(cursor.getColumnIndex(COLUMN_COLLANA))
+                val fumetto = Fumetto(id, titolo, autore, numeroPagine, stato, collana)
+                it.write("$id,$titolo,$autore,$numeroPagine,$stato,$collana\n")
+            }
+        }
+        cursor.close()
+        db.close()
+    }
 }
-
