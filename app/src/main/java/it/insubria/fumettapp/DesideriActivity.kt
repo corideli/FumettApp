@@ -32,7 +32,7 @@ class DesideriActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_favorites -> {
+                R.id.nav_logout -> {
                     val intent = Intent(this, PreferitiActivity::class.java)
                     startActivity(intent)
                     true

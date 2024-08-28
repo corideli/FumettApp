@@ -12,7 +12,7 @@ class PreferitiActivity : AppCompatActivity() {
         setContentView(R.layout.activity_preferiti)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.nav_favorites
+        bottomNavigationView.selectedItemId = R.id.nav_logout
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -20,7 +20,7 @@ class PreferitiActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_favorites -> {
+                R.id.nav_logout -> {
                     // Rimanere sulla pagina Preferiti
                     true
                 }

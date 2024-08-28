@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import it.insubria.fumettapp.DatabaseHelper.Companion.TABLE_FUMETTI
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_ID
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_TITOLO
@@ -15,8 +16,10 @@ import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_AUTORE
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_STATO
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_COLLANA
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_NUMERO_PAGINE
+import it.insubria.fumettapp.accesso.LoginActivity
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var firebaseAuth: FirebaseAuth
 
     companion object {
         const val REQUEST_CODE_CREATE_FILE = 1
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val dbHelper = DatabaseHelper(this)
-
+        firebaseAuth = FirebaseAuth.getInstance()
         // Creazione di un backup
         dbHelper.createBackup(this)
 
@@ -40,8 +43,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_favorites -> {
-                    val intent = Intent(this, PreferitiActivity::class.java)
+                R.id.nav_logout -> {
+                    firebaseAuth.signOut()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     true
                 }
