@@ -60,6 +60,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnCerca" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
@@ -82,10 +83,19 @@
             android:text="Backup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.838"
+            app:layout_constraintHorizontal_bias="0.196"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.098" />
+            app:layout_constraintVertical_bias="0.943" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Logout"
+            tools:layout_editor_absoluteX="269dp"
+            tools:layout_editor_absoluteY="696dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
