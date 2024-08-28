@@ -18,13 +18,10 @@ import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_COLLANA
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_NUMERO_PAGINE
 import it.insubria.fumettapp.accesso.LoginActivity
 
-import com.google.firebase.auth.FirebaseAuth
-import it.insubria.fumettapp.R
-import it.insubria.fumettapp.accesso.LoginActivity
 import it.insubria.fumettapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var firebaseAuth: FirebaseAuth
+
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -37,13 +34,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        binding.btnLogout.setOnClickListener {
-            logout()
-        }
 
         val dbHelper = DatabaseHelper(this)
         firebaseAuth = FirebaseAuth.getInstance()
@@ -150,13 +140,5 @@ class MainActivity : AppCompatActivity() {
             cursor.close()
             db.close()
         }
-    }
-
-    private fun logout() {
-        firebaseAuth.signOut() // Effettua il logout da Firebase
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Cancella lo stack di attività
-        startActivity(intent)
-        finish() // Chiude l'attuale attività
     }
 }
