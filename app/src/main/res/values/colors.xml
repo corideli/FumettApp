@@ -7,4 +7,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="title">#653C0F</color>
     <color name="color_hint">#CC464646</color>
+    <color name="btn">#B3957F37</color> />
 </resources>

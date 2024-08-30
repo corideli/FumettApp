@@ -67,7 +67,6 @@
             android:id="@+id/btnSalva"
             android:layout_width="120dp"
             android:layout_height="78dp"
-            android:background="@drawable/btn"
             android:text="Salva" />
 
         <Button
