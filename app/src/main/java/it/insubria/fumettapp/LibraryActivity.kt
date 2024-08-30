@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.insubria.fumettapp.accesso.Logout
 
 class LibraryActivity : AppCompatActivity() {
 
@@ -34,8 +35,7 @@ class LibraryActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_logout -> {
-                    val intent = Intent(this, PreferitiActivity::class.java)
-                    startActivity(intent)
+                    Logout(this).signOutUser()
                     true
                 }
                 R.id.nav_add -> {
@@ -141,6 +141,16 @@ class LibraryActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
     }
+    override fun onBackPressed() {
+        if (::fumettoAdapter.isInitialized && recyclerView.adapter == fumettoAdapter) {
+            // Se il fumettoAdapter è attualmente mostrato, torna al collanaAdapter
+            recyclerView.adapter = collanaAdapter
+        } else {
+            // Altrimenti, chiama il comportamento predefinito del tasto indietro
+            super.onBackPressed()
+        }
+    }
+
 
     companion object {
         private const val REQUEST_CODE_ADD = 1

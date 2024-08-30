@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.insubria.fumettapp.accesso.Logout
 
 class DesideriActivity : AppCompatActivity() {
 
@@ -33,8 +34,7 @@ class DesideriActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_logout -> {
-                    val intent = Intent(this, PreferitiActivity::class.java)
-                    startActivity(intent)
+                    Logout(this).signOutUser()
                     true
                 }
                 R.id.nav_add -> {

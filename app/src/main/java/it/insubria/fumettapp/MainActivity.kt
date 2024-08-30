@@ -17,6 +17,7 @@ import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_STATO
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_COLLANA
 import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_NUMERO_PAGINE
 import it.insubria.fumettapp.accesso.LoginActivity
+import it.insubria.fumettapp.accesso.Logout
 
 import it.insubria.fumettapp.databinding.ActivityMainBinding
 
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var firebaseAuth: FirebaseAuth
 
     companion object {
         const val REQUEST_CODE_CREATE_FILE = 1
@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         val dbHelper = DatabaseHelper(this)
-        firebaseAuth = FirebaseAuth.getInstance()
         // Creazione di un backup
         dbHelper.createBackup(this)
 
@@ -49,10 +48,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_logout -> {
-                    firebaseAuth.signOut()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
+                    Logout(this).signOutUser()
                     true
                 }
 

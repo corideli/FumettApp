@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rettangolofumetto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -12,27 +15,43 @@
         android:layout_height="wrap_content"
         android:text="Titolo Fumetto"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/autoreFumetto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Autore Fumetto"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/titoloFumetto"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/titoloFumetto"
+        app:layout_constraintTop_toBottomOf="@+id/titoloFumetto" />
 
     <TextView
         android:id="@+id/numeroPagineFumetto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Numero Pagine"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/autoreFumetto"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/autoreFumetto"
+        app:layout_constraintTop_toBottomOf="@+id/autoreFumetto" />
 
     <View
         android:id="@+id/statoPallino"
-        android:layout_width="24dp"
+        android:layout_width="25dp"
         android:layout_height="24dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/circle_shape" />
+        android:background="@drawable/circle_shape"
+        app:layout_constraintBottom_toBottomOf="@+id/titoloFumetto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/titoloFumetto"
+        app:layout_constraintTop_toTopOf="@+id/titoloFumetto"
+        app:layout_constraintVertical_bias="0.0" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/sfondoaggiungifumetto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -9,25 +10,34 @@
             android:id="@+id/etTitolo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Titolo" />
+            android:background="#80FFFFFF"
+            android:hint="Titolo"
+            android:textColorHint="@color/color_hint" />
 
         <EditText
             android:id="@+id/etAutore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Autore" />
+            android:background="#80FFFFFF"
+            android:hint="Autore"
+            android:textColorHint="@color/color_hint" />
 
         <EditText
             android:id="@+id/etNumeroPagine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#80FFFFFF"
             android:hint="Numero di Pagine"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColorHint="@color/color_hint" />
+
         <EditText
             android:id="@+id/etCollana"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Collana/Serie" />
+            android:background="#80FFFFFF"
+            android:hint="Collana/Serie"
+            android:textColorHint="@color/color_hint" />
 
         <RadioGroup
             android:id="@+id/rgStato"
@@ -55,8 +65,9 @@
 
         <Button
             android:id="@+id/btnSalva"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="78dp"
+            android:background="@drawable/btn"
             android:text="Salva" />
 
         <Button
