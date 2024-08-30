@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.insubria.fumettapp.accesso.Logout
-
+//gestisce l'interfaccia utente e le funzionalità per visualizzare e gestire una lista di fumetti mancanti
 class DesideriActivity : AppCompatActivity() {
 
-    private lateinit var databaseHelper: DatabaseHelper
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var fumettoAdapter: FumettoAdapter
+    private lateinit var databaseHelper: DatabaseHelper//istanza della classe `DatabaseHelper`, che gestisce le operazioni CRUD sul database SQLite
+    private lateinit var recyclerView: RecyclerView//per visualizzare la lista di fumetti
+    private lateinit var fumettoAdapter: FumettoAdapter//adapter per gestire l'interfaccia tra la lista di fumetti e il `RecyclerView`
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_desideri)
 
-        databaseHelper = DatabaseHelper(this)
-        recyclerView = findViewById(R.id.recyclerView)
+        databaseHelper = DatabaseHelper(this)//crea un'istanza per accedere al database
+        recyclerView = findViewById(R.id.recyclerView)//configura il `RecyclerView` con un layout manager lineare
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
@@ -46,25 +46,23 @@ class DesideriActivity : AppCompatActivity() {
             }
         }
 
-        // Carica i fumetti mancanti dal database
         loadFumettiMancantiFromDatabase()
     }
 
-    private fun loadFumettiMancantiFromDatabase() {
+    private fun loadFumettiMancantiFromDatabase() {//carica i fumetti mancanti dal database
         val fumetti = databaseHelper.getFumettiMancanti()
         if (::fumettoAdapter.isInitialized) {
-            fumettoAdapter.updateFumetti(fumetti)
+            fumettoAdapter.updateFumetti(fumetti)//aggiorna la lista di fumetti
         } else {
             fumettoAdapter = FumettoAdapter(fumetti,
                 onItemClick = { fumetto ->
-                    // Gestisci il click semplice qui, se necessario
                 },
                 onItemLongClick = { fumetto ->
                     mostraDialogoOpzioni(fumetto)
                 }
             )
             recyclerView.adapter = fumettoAdapter
-        }
+        }//crea l'adattatore con i fumetti mancanti e lo associa al `RecyclerView`
     }
 
     override fun onResume() {
@@ -72,7 +70,7 @@ class DesideriActivity : AppCompatActivity() {
         // Ricarica i fumetti mancanti dal database quando l'attività riprende
         loadFumettiMancantiFromDatabase()
 
-        // Assicurati che l'item corretto sia selezionato
+        // Assicura che l'item corretto sia selezionato
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = 0
     }
@@ -89,26 +87,26 @@ class DesideriActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostraDialogoOpzioni(fumetto: Fumetto) {
+    private fun mostraDialogoOpzioni(fumetto: Fumetto) {//due opzioni quando si tiene premuto su un fumetto
         val options = arrayOf("Modifica", "Elimina")
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Scegli un'opzione")
         builder.setItems(options) { dialog, which ->
             when (which) {
-                0 -> modificaFumetto(fumetto)
-                1 -> confermaEliminazioneFumetto(fumetto)
+                0 -> modificaFumetto(fumetto) //apre AggiungiFumettoActivity
+                1 -> confermaEliminazioneFumetto(fumetto) //conferma l'eliminazione
             }
         }
         builder.show()
     }
 
-    private fun modificaFumetto(fumetto: Fumetto) {
+    private fun modificaFumetto(fumetto: Fumetto) {//avvia AggiungiFumettoActivity
         val intent = Intent(this, AggiungiFumettoActivity::class.java)
         intent.putExtra("fumetto_id", fumetto.id)
         startActivityForResult(intent, REQUEST_CODE_EDIT)
     }
 
-    private fun confermaEliminazioneFumetto(fumetto: Fumetto) {
+    private fun confermaEliminazioneFumetto(fumetto: Fumetto) {//elimina il fumetto dal database e aggiorna la lista
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Conferma eliminazione")
         builder.setMessage("Sei sicuro di voler eliminare questo fumetto?")
@@ -123,7 +121,7 @@ class DesideriActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    companion object {
+    companion object {//contiene costanti che vengono utilizzate per identificare le richieste di aggiunta o modifica di un fumetto
         private const val REQUEST_CODE_ADD = 1
         private const val REQUEST_CODE_EDIT = 2
     }

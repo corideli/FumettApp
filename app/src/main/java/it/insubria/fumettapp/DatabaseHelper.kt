@@ -9,11 +9,13 @@ import android.os.Environment
 import java.io.File
 import java.io.FileWriter
 
-
+//si occupa della creazione, gestione e interazione con il database, consentendo di eseguire operazioni CRUD sui dati relativi ai fumetti
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    //estende `SQLiteOpenHelper`
+    //il costruttore della classe richiede un `Context`, che rappresenta il contesto dell'applicazione
 
-    companion object {
+    companion object {//contiene le costanti che definiscono la struttura del database e i campi della tabella
 
         private const val DATABASE_NAME = "fumetti.db"
         private const val DATABASE_VERSION = 1
@@ -36,18 +38,17 @@ class DatabaseHelper(context: Context) :
                     "$COLUMN_COLLANA TEXT)"
     }
 
-    override fun onCreate(db: SQLiteDatabase) {
+    override fun onCreate(db: SQLiteDatabase) {//Esegue la query SQL per creare la tabella `fumetti`.
         db.execSQL(TABLE_CREATE)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {//chiamato quando la versione del database cambia. Elimina la vecchia tabella e ne crea una nuova
         db.execSQL("DROP TABLE IF EXISTS $TABLE_FUMETTI")
         onCreate(db)
     }
 
-
-    // Funzioni CRUD
-    fun insertFumetto(fumetto: Fumetto): Long {
+    // Funzioni CRUD (per interagire con il database)
+    fun insertFumetto(fumetto: Fumetto): Long { //inserisce un nuovo fumetto nella tabella fumetti
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
             put(COLUMN_TITOLO, fumetto.titolo)
@@ -57,7 +58,7 @@ class DatabaseHelper(context: Context) :
             put(COLUMN_COLLANA, fumetto.collana)
         }
         return db.insert(TABLE_FUMETTI, null, contentValues)
-    }
+    } //restituisce l'ID della riga appena inserita.
 
     fun getAllFumetti(): List<Fumetto> {
         val fumetti = mutableListOf<Fumetto>()
@@ -77,11 +78,9 @@ class DatabaseHelper(context: Context) :
         }
         cursor.close()
         return fumetti
-    }
+    } //restituisce una lista di tutti i fumetti presenti nel database
 
-    //CORREGGERE I SEGUENTI METODI PER LA MODIFICA DEI FUMETTI ED ELIMINAZIONE
-
-    fun updateFumetto(fumetto: Fumetto): Int {
+    fun updateFumetto(fumetto: Fumetto): Int {//aggiorna i dati di un fumetto esistente nel database
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
             put(COLUMN_TITOLO, fumetto.titolo)
@@ -95,10 +94,10 @@ class DatabaseHelper(context: Context) :
             contentValues,
             "$COLUMN_ID = ?",
             arrayOf(fumetto.id.toString())
-        )
+        )//restituisce il numero di righe aggiornate
     }
 
-    fun getFumettoById(id: Long): Fumetto? {
+    fun getFumettoById(id: Long): Fumetto? {//restituisce un singolo fumetto in base all'ID specificato
         val db = this.readableDatabase
         val cursor = db.query(
             TABLE_FUMETTI,
@@ -123,13 +122,14 @@ class DatabaseHelper(context: Context) :
         }
     }
 
-    fun deleteFumetto(fumettoId: Long): Int {
+    fun deleteFumetto(fumettoId: Long): Int {//elimina un fumetto dal database in base all'ID
         val db = writableDatabase
         return db.delete(TABLE_FUMETTI, "$COLUMN_ID=?", arrayOf(fumettoId.toString()))
-    }
+    }//Restituisce il numero di righe eliminate
 
+    //Funzioni di Ricerca e Filtraggio
     @SuppressLint("Range")
-    fun searchFumetti(searchTerm: String): List<Fumetto> {
+    fun searchFumetti(searchTerm: String): List<Fumetto> { //cerca fumetti nel database il cui titolo o autore corrisponde al termine di ricerca
         val fumetti = mutableListOf<Fumetto>()
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_TITOLO LIKE '%$searchTerm%' OR $COLUMN_AUTORE LIKE '%$searchTerm%'"
@@ -151,7 +151,7 @@ class DatabaseHelper(context: Context) :
     }
 
     @SuppressLint("Range")
-    fun getAllCollane(): List<String> {
+    fun getAllCollane(): List<String> {//recupera tutte le diverse "collane" presenti nel database, cioè tutte le serie o collezioni di fumetti
         val collane = mutableListOf<String>()
         val db = this.readableDatabase
         val query = "SELECT DISTINCT collana FROM $TABLE_FUMETTI"
@@ -167,7 +167,8 @@ class DatabaseHelper(context: Context) :
     }
 
     @SuppressLint("Range")
-    fun getFumettiPerCollana(collana: String): List<Fumetto> {
+    fun getFumettiPerCollana(collana: String): List<Fumetto> {//recupera tutti i fumetti che appartengono a una determinata collana
+
         val fumetti = mutableListOf<Fumetto>()
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_FUMETTI WHERE collana = ?"
@@ -186,10 +187,10 @@ class DatabaseHelper(context: Context) :
 
         cursor.close()
         return fumetti
-    }
+    }//restituisce una lista di fumetti filtrata per la collana specificata
 
     @SuppressLint("Range")
-    fun getFumettiMancanti(): List<Fumetto> {
+    fun getFumettiMancanti(): List<Fumetto> {//recupera tutti i fumetti che hanno lo stato "MANCANTE" nel database
         val fumetti = mutableListOf<Fumetto>()
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_STATO = ?"
@@ -209,7 +210,8 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return fumetti
     }
-    fun createBackup(context: Context) {
+    @SuppressLint("Range")
+    fun createBackup(context: Context) {//crea un backup del database esportando i dati in un file CSV
         val db = this.readableDatabase
 
         // Estrai i dati

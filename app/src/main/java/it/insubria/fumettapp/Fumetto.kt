@@ -1,6 +1,6 @@
 package it.insubria.fumettapp
 
-//Classe per rappresentare un fumetto.
+//Classe per rappresentare un fumetto e le sua informazioni
 
 data class Fumetto(
     val id: Long = 0,

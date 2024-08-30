@@ -1,45 +1,3 @@
-/*package it.insubria.fumettapp
-
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-
-class AddActivity : AppCompatActivity() {
-
-    private lateinit var dbHelper: ComicDatabaseHelper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_add)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        dbHelper = ComicDatabaseHelper(this)
-
-        // Esempio di aggiunta di un fumetto
-        val newComic =
-            Comic(title = "Batman", author = "Bob Kane", year = 1939, genre = "Superhero", pages = 182)
-        dbHelper.addComic(newComic)
-
-        // Esempio di recupero di tutti i fumetti
-        val comics = dbHelper.getAllComics()
-        comics.forEach {
-            println("Comic: ${it.title}, Author: ${it.author}")
-
-            enableEdgeToEdge()
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
-            }
-        }
-    }
-}*/
 package it.insubria.fumettapp
 
 import android.app.Activity
@@ -50,11 +8,11 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+//permette di aggiungere o aggiornare un fumetto
 class AggiungiFumettoActivity : AppCompatActivity() {
 
-    private lateinit var databaseHelper: DatabaseHelper
-    private var fumettoId: Long = -1
+    private lateinit var databaseHelper: DatabaseHelper//classe per gestire le operazioni sul database SQLite
+    private var fumettoId: Long = -1//variabile per conservare l'ID del fumetto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +27,11 @@ class AggiungiFumettoActivity : AppCompatActivity() {
         val etCollana: EditText = findViewById(R.id.etCollana)
         val btnSalva: Button = findViewById(R.id.btnSalva)
         val btnAggiorna: Button = findViewById(R.id.btnAggiorna)
-
+        //gli elementi dell'interfaccia utente vengono recuperati
 
         fumettoId = intent.getLongExtra("fumetto_id", -1)
         if (fumettoId != -1L) {
-            val fumetto = databaseHelper.getFumettoById(fumettoId)
+            val fumetto = databaseHelper.getFumettoById(fumettoId)//Caricamento dei dati se l'ID del fumetto è presente
             fumetto?.let {
                 etTitolo.setText(it.titolo)
                 etAutore.setText(it.autore)
@@ -116,7 +74,7 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Errore nel salvataggio", Toast.LENGTH_SHORT).show()
             }
-        }
+        }//i dati inseriti vengono letti e usati per creare un nuovo fumetto
 
         btnAggiorna.setOnClickListener {
             val titolo = etTitolo.text.toString()
@@ -129,7 +87,6 @@ class AggiungiFumettoActivity : AppCompatActivity() {
                 R.id.rbMancante -> Stato.MANCANTE
                 else -> Stato.PRESENTE
             }
-
             val fumettoAggiornato = Fumetto(
                 id = fumettoId,
                 titolo = titolo,
@@ -146,6 +103,6 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Errore nell'aggiornamento", Toast.LENGTH_SHORT).show()
             }
-        }
+        }//vengono letti i dati dei campi e viene creato un fumetto con l'ID esistente e i nuovi valori
     }
 }
