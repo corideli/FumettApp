@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Environment
+import android.util.Log
 import java.io.File
 import java.io.FileWriter
 
@@ -18,7 +18,7 @@ class DatabaseHelper(context: Context) :
     companion object {//contiene le costanti che definiscono la struttura del database e i campi della tabella
 
         private const val DATABASE_NAME = "fumetti.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2 // Incrementa la versione del database
 
         const val TABLE_FUMETTI = "fumetti"
         const val COLUMN_ID = "id"
@@ -28,7 +28,10 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_STATO = "stato"
         const val COLUMN_COLLANA = "collana"
 
-        private const val TABLE_CREATE =
+        const val TABLE_COLLANE = "Collane" // Nome della tabella Collane
+        const val COLUMN_NOME = "nome" // Colonna della tabella Collane
+
+        private const val TABLE_CREATE_FUMETTI =
             "CREATE TABLE $TABLE_FUMETTI (" +
                     "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "$COLUMN_TITOLO TEXT, " +
@@ -36,15 +39,21 @@ class DatabaseHelper(context: Context) :
                     "$COLUMN_NUMERO_PAGINE INTEGER, " +
                     "$COLUMN_STATO TEXT," +
                     "$COLUMN_COLLANA TEXT)"
+
+        private const val TABLE_CREATE_COLLANE =
+            "CREATE TABLE $TABLE_COLLANE (" +
+                    "$COLUMN_NOME TEXT PRIMARY KEY)"
     }
 
-    override fun onCreate(db: SQLiteDatabase) {//Esegue la query SQL per creare la tabella `fumetti`.
-        db.execSQL(TABLE_CREATE)
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(TABLE_CREATE_FUMETTI)
+        db.execSQL(TABLE_CREATE_COLLANE) // Creazione della tabella Collane
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {//chiamato quando la versione del database cambia. Elimina la vecchia tabella e ne crea una nuova
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_FUMETTI")
-        onCreate(db)
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) {
+            db.execSQL(TABLE_CREATE_COLLANE) // Crea la tabella Collane se si aggiorna dalla versione 1
+        }
     }
 
     // Funzioni CRUD (per interagire con il database)
@@ -210,6 +219,99 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return fumetti
     }
+
+    fun esisteFumettoConDettagli(titolo: String, autore: String, numeroPagine: Int, collana: String, idEscludere: Long? = null): Boolean {
+        val db = this.readableDatabase
+        val query = if (idEscludere != null) {
+            "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_TITOLO = ? AND $COLUMN_AUTORE = ? AND $COLUMN_NUMERO_PAGINE = ? AND $COLUMN_COLLANA = ? AND $COLUMN_ID != ?"
+        } else {
+            "SELECT * FROM $TABLE_FUMETTI WHERE $COLUMN_TITOLO = ? AND $COLUMN_AUTORE = ? AND $COLUMN_NUMERO_PAGINE = ? AND $COLUMN_COLLANA = ?"
+        }
+        val cursor = db.rawQuery(query, if (idEscludere != null) {
+            arrayOf(titolo, autore, numeroPagine.toString(), collana, idEscludere.toString())
+        } else {
+            arrayOf(titolo, autore, numeroPagine.toString(), collana)
+        })
+
+        val esiste = cursor.count > 0
+        cursor.close()
+        return esiste
+    }
+
+
+    fun updateCollanaNome(oldName: String, newName: String): Boolean {
+        val db = writableDatabase
+        var successo = false
+
+        db.beginTransaction()
+        try {
+            // 1. Aggiorna il nome nella tabella Collane
+            val contentValues = ContentValues().apply {
+                put(COLUMN_NOME, newName)
+            }
+            val resultCollane = db.update(
+                TABLE_COLLANE,
+                contentValues,
+                "$COLUMN_NOME = ?",
+                arrayOf(oldName)
+            )
+            Log.d("DatabaseHelper", "Update Collane Result: $resultCollane")
+
+            // 2. Aggiorna il nome della collana nella tabella Fumetti
+            val contentValuesFumetti = ContentValues().apply {
+                put(COLUMN_COLLANA, newName)
+            }
+            val resultFumetti = db.update(
+                TABLE_FUMETTI,
+                contentValuesFumetti,
+                "$COLUMN_COLLANA = ?",
+                arrayOf(oldName)
+            )
+            Log.d("DatabaseHelper", "Update Fumetti Result: $resultFumetti")
+            Log.d("DatabaseHelper", "Updating Collane from $oldName to $newName")
+
+            if (resultCollane > 0 && resultFumetti > 0) {
+                db.setTransactionSuccessful()
+                successo = true
+            }
+        } finally {
+            db.endTransaction()
+        }
+
+        return successo
+    }
+
+    fun aggiungiCollanaSeNecessario(nomeCollana: String) {
+        val db = writableDatabase
+        val query = "SELECT COUNT(*) FROM $TABLE_COLLANE WHERE $COLUMN_NOME = ?"
+        val cursor = db.rawQuery(query, arrayOf(nomeCollana))
+
+        if (cursor.moveToFirst()) {
+            val count = cursor.getInt(0)
+            if (count == 0) {
+                // La collana non esiste, quindi la aggiungiamo
+                val contentValues = ContentValues().apply {
+                    put(COLUMN_NOME, nomeCollana)
+                }
+                db.insert(TABLE_COLLANE, null, contentValues)
+            }
+        }
+        cursor.close()
+    }
+
+    fun deleteCollanaEAssociati(collana: String) {
+        writableDatabase.beginTransaction()
+        try {
+            writableDatabase.delete("Fumetti", "collana = ?", arrayOf(collana))
+            writableDatabase.delete("Collane", "nome = ?", arrayOf(collana))
+            writableDatabase.setTransactionSuccessful()
+        } finally {
+            writableDatabase.endTransaction()
+        }
+    }
+
+
+
     @SuppressLint("Range")
     fun createBackup(context: Context) {//crea un backup del database esportando i dati in un file CSV
         val db = this.readableDatabase

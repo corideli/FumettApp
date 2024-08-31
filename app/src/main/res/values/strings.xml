@@ -2,7 +2,7 @@
     <string name="app_name">FumettApp</string>
     <string name="titolo">FumettApp</string>
     <string name="login">Login</string>
-    <string name="no_Account">Non hai un\'account? Registarti subito</string>
+    <string name="no_Account">Non hai un\'account? Registrati subito</string>
     <string name="accedi">Accedi</string>
     <string name="password_dimenticata">Password dimenticata</string>
     <string name="e_mail">E-mail</string>

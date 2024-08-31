@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,9 +49,14 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
 
-        collanaAdapter = CollanaAdapter(emptyList()) { collana ->
-            mostraFumettiPerCollana(collana)
-        }
+        collanaAdapter = CollanaAdapter(emptyList(),
+            onItemClick = { collana ->
+                mostraFumettiPerCollana(collana)
+            },
+            onItemLongClick = { collana ->
+                mostraDialogoOpzioniCollana(collana)
+            }
+        )
         recyclerView.adapter = collanaAdapter
 
         // Carica le collane dal database
@@ -121,6 +128,20 @@ class LibraryActivity : AppCompatActivity() {
         builder.show()
     }
 
+    private fun mostraDialogoOpzioniCollana(collana: String) {
+        val options = arrayOf("Modifica Collana", "Elimina Collana")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Scegli un'opzione")
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> modificaCollana(collana)
+                1 -> confermaEliminazioneCollana(collana)
+            }
+        }
+        builder.show()
+    }
+
+
     private fun modificaFumetto(fumetto: Fumetto) {
         val intent = Intent(this, AggiungiFumettoActivity::class.java)
         intent.putExtra("fumetto_id", fumetto.id)
@@ -133,7 +154,7 @@ class LibraryActivity : AppCompatActivity() {
         builder.setMessage("Sei sicuro di voler eliminare questo fumetto?")
         builder.setPositiveButton("Sì") { dialog, which ->
             databaseHelper.deleteFumetto(fumetto.id)
-            loadFumettiFromDatabase()
+            mostraFumettiPerCollana(fumetto.collana) // Ricarica i fumetti della stessa collana
         }
         builder.setNegativeButton("No") { dialog, which ->
             dialog.dismiss()
@@ -141,6 +162,51 @@ class LibraryActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
     }
+
+    private fun modificaCollana(collana: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Modifica Collana")
+
+        val input = EditText(this)
+        input.setText(collana)
+        builder.setView(input)
+
+        builder.setPositiveButton("Salva") { dialog, which ->
+            val nuovoNome = input.text.toString().trim()
+            if (nuovoNome.isNotEmpty()) {
+                val successo = databaseHelper.updateCollanaNome(collana, nuovoNome)
+                if (successo) {
+                    loadCollaneFromDatabase() // Aggiorna la lista delle collane
+                    Toast.makeText(this, "Nome collana aggiornato!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Errore nell'aggiornamento del nome.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Il nome della collana non può essere vuoto.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        builder.setNegativeButton("Annulla") { dialog, which ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+
+    private fun confermaEliminazioneCollana(collana: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Conferma eliminazione")
+        builder.setMessage("Sei sicuro di voler eliminare questa collana e tutti i fumetti al suo interno?")
+        builder.setPositiveButton("Sì") { dialog, which ->
+            databaseHelper.deleteCollanaEAssociati(collana)
+            loadCollaneFromDatabase() // Aggiorna la lista delle collane
+        }
+        builder.setNegativeButton("No") { dialog, which ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+
     override fun onBackPressed() {
         if (::fumettoAdapter.isInitialized && recyclerView.adapter == fumettoAdapter) {
             // Se il fumettoAdapter è attualmente mostrato, torna al collanaAdapter

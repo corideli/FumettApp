@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 //classe che gestisce una lista di `collane`, che è una lista di stringhe rappresentanti i nomi delle collane di fumetti
 class CollanaAdapter(
     private var collane: List<String>,//lista di stringhe che rappresenta i dati da visualizzare nel `RecyclerView`
-    private val onItemClick: (String) -> Unit//funzione lambda che viene eseguita quando un elemento del `RecyclerView` viene cliccato
+    private val onItemClick: (String) -> Unit,//funzione lambda che viene eseguita quando un elemento del `RecyclerView` viene cliccato
+    private val onItemLongClick: (String) -> Unit
 ) : RecyclerView.Adapter<CollanaAdapter.CollanaViewHolder>() {
 
     inner class CollanaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {//rappresenta la vista per un singolo elemento del `RecyclerView`
@@ -21,10 +22,18 @@ class CollanaAdapter(
         return CollanaViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CollanaViewHolder, position: Int) {//viene chiamato per associare i dati alla vista
-        val collana = collane[position]//recupera il nome della collana dall'elenco utilizzando la posizione corrente.
-        holder.textView.text = collana //imposta il testo del `TextView` all'interno del `ViewHolder` con il nome della collana corrente
-        holder.itemView.setOnClickListener { onItemClick(collana) }//imposta un listener per il click sull'elemento corrente
+    override fun onBindViewHolder(holder: CollanaViewHolder, position: Int) {
+        val collana = collane[position]
+        holder.textView.text = collana
+
+        // Imposta il listener per il click sull'elemento
+        holder.itemView.setOnClickListener { onItemClick(collana) }
+
+        // Imposta il listener per il long-click sull'elemento
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(collana)
+            true // Indica che il long-click è stato gestito
+        }
     }
 
     override fun getItemCount(): Int {//ritorna il numero di elementi nella lista `collane`
@@ -32,7 +41,8 @@ class CollanaAdapter(
     }
 
     fun updateCollane(newCollane: List<String>) {//consente di aggiornare la lista delle `collane` con una nuova lista
-        collane = newCollane
+        this.collane = newCollane
         notifyDataSetChanged()
     }
+
 }

@@ -1,6 +1,7 @@
 package it.insubria.fumettapp
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -8,6 +9,9 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import it.insubria.fumettapp.DatabaseHelper.Companion.COLUMN_NOME
+import it.insubria.fumettapp.DatabaseHelper.Companion.TABLE_COLLANE
+
 //permette di aggiungere o aggiornare un fumetto
 class AggiungiFumettoActivity : AppCompatActivity() {
 
@@ -52,6 +56,23 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val autore = etAutore.text.toString()
             val numeroPagine = etNumeroPagine.text.toString().toIntOrNull() ?: 0
             val collana = etCollana.text.toString()
+
+            // Controllo di validazione
+            if (titolo.isEmpty() || autore.isEmpty() || numeroPagine <= 0 || collana.isEmpty()) {
+                Toast.makeText(this, "Per favore, compila tutti i campi", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Verifica duplicati
+            val esisteFumetto = databaseHelper.esisteFumettoConDettagli(titolo, autore, numeroPagine, collana)
+            if (esisteFumetto) {
+                Toast.makeText(this, "Un fumetto con questi dettagli esiste già", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Aggiungi la collana se non esiste
+            databaseHelper.aggiungiCollanaSeNecessario(collana)
+
             val stato = when (rgStato.checkedRadioButtonId) {
                 R.id.rbPresente -> Stato.PRESENTE
                 R.id.rbPrenotazione -> Stato.PRENOTAZIONE
@@ -69,18 +90,32 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             val result = databaseHelper.insertFumetto(nuovoFumetto)
             if (result != -1L) {
                 Toast.makeText(this, "Fumetto salvato con successo", Toast.LENGTH_SHORT).show()
+                resetCampi()
                 setResult(Activity.RESULT_OK)
-                finish()
             } else {
                 Toast.makeText(this, "Errore nel salvataggio", Toast.LENGTH_SHORT).show()
             }
-        }//i dati inseriti vengono letti e usati per creare un nuovo fumetto
+        } //i dati inseriti vengono letti e usati per creare un nuovo fumetto
 
         btnAggiorna.setOnClickListener {
             val titolo = etTitolo.text.toString()
             val autore = etAutore.text.toString()
             val numeroPagine = etNumeroPagine.text.toString().toIntOrNull() ?: 0
             val collana = etCollana.text.toString()
+
+            // Controllo di validazione
+            if (titolo.isEmpty() || autore.isEmpty() || numeroPagine <= 0 || collana.isEmpty()) {
+                Toast.makeText(this, "Per favore, compila tutti i campi", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Verifica duplicati
+            val esisteFumetto = databaseHelper.esisteFumettoConDettagli(titolo, autore, numeroPagine, collana, fumettoId)
+            if (esisteFumetto) {
+                Toast.makeText(this, "Un fumetto con questi dettagli esiste già", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val stato = when (rgStato.checkedRadioButtonId) {
                 R.id.rbPresente -> Stato.PRESENTE
                 R.id.rbPrenotazione -> Stato.PRENOTAZIONE
@@ -99,10 +134,26 @@ class AggiungiFumettoActivity : AppCompatActivity() {
             if (result > 0) {
                 Toast.makeText(this, "Fumetto aggiornato con successo", Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)
-                finish()
             } else {
                 Toast.makeText(this, "Errore nell'aggiornamento", Toast.LENGTH_SHORT).show()
             }
         }//vengono letti i dati dei campi e viene creato un fumetto con l'ID esistente e i nuovi valori
     }
+
+    private fun resetCampi() {
+        findViewById<EditText>(R.id.etTitolo).text.clear()
+        findViewById<EditText>(R.id.etAutore).text.clear()
+        findViewById<EditText>(R.id.etNumeroPagine).text.clear()
+        findViewById<EditText>(R.id.etCollana).text.clear()
+        findViewById<RadioGroup>(R.id.rgStato).clearCheck()
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Chiude tutte le attività nella parte superiore dello stack e apre MainActivity
+        startActivity(intent)
+        finish() // Termina l'Activity corrente
+    }
+
+
 }

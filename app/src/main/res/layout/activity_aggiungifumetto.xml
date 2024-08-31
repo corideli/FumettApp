@@ -10,26 +10,32 @@
             android:id="@+id/etTitolo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:background="#80FFFFFF"
             android:hint="Titolo"
-            android:textColorHint="@color/color_hint" />
+            android:textColorHint="@color/color_hint"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/etAutore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:background="#80FFFFFF"
             android:hint="Autore"
-            android:textColorHint="@color/color_hint" />
+            android:textColorHint="@color/color_hint"
+            android:textSize="24sp"/>
 
         <EditText
             android:id="@+id/etNumeroPagine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:background="#80FFFFFF"
             android:hint="Numero di Pagine"
             android:inputType="number"
-            android:textColorHint="@color/color_hint" />
+            android:textColorHint="@color/color_hint"
+            android:textSize="24sp"/>
 
         <EditText
             android:id="@+id/etCollana"
@@ -37,7 +43,8 @@
             android:layout_height="wrap_content"
             android:background="#80FFFFFF"
             android:hint="Collana/Serie"
-            android:textColorHint="@color/color_hint" />
+            android:textColorHint="@color/color_hint"
+            android:textSize="24sp"/>
 
         <RadioGroup
             android:id="@+id/rgStato"
@@ -48,19 +55,22 @@
                     android:id="@+id/rbPresente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Presente" />
+                    android:text="Presente"
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/rbPrenotazione"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="In prenotazione" />
+                    android:text="In prenotazione"
+                    android:textSize="20sp"/>
 
                 <RadioButton
                     android:id="@+id/rbMancante"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mancante" />
+                    android:text="Mancante"
+                    android:textSize="20sp"/>
         </RadioGroup>
 
         <Button
