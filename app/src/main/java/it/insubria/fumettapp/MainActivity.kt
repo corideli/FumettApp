@@ -20,22 +20,19 @@ import it.insubria.fumettapp.accesso.LoginActivity
 import it.insubria.fumettapp.accesso.Logout
 
 import it.insubria.fumettapp.databinding.ActivityMainBinding
-
+//gestisce la navigazione principale dell'app
 class MainActivity : AppCompatActivity() {
-
-
-    private lateinit var binding: ActivityMainBinding
 
     companion object {
         const val REQUEST_CODE_CREATE_FILE = 1
-    }
+    }//definisce una costante utilizzata per identificare la richiesta di creazione di un file durante il backup
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        binding = ActivityMainBinding.inflate(layoutInflater)
 
-        val dbHelper = DatabaseHelper(this)
+        val dbHelper = DatabaseHelper(this) //creata istanza di DatabaseHelper per gestire le operazioni sul database locale
         // Creazione di un backup
         dbHelper.createBackup(this)
 
@@ -62,11 +59,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val btnLibreria: Button = findViewById(R.id.btnLibreria)
-        val btnCerca: Button = findViewById(R.id.btnCerca)
-        val btnDesideri: Button = findViewById(R.id.btnDesideri)
-        val backupButton: Button = findViewById(R.id.backupButton)
-
+        val btnLibreria: Button = findViewById(R.id.btnLibreria)//apre `LibraryActivity`, dove l'utente può vedere la libreria dei fumetti
+        val btnCerca: Button = findViewById(R.id.btnCerca)//apre `CercaActivity`, dove l'utente può cercare fumetti
+        val btnDesideri: Button = findViewById(R.id.btnDesideri)//apre `DesideriActivity`, che mostra una lista dei fumetti mancanti
+        val backupButton: Button = findViewById(R.id.backupButton)//apre un'intent per creare un nuovo documento, usato per salvare il backup dei dati
 
         btnLibreria.setOnClickListener {
             val intent = Intent(this, LibraryActivity::class.java)
@@ -93,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onResume() {
+    override fun onResume() {//imposta `nav_home` come l'elemento selezionato quando l'activity torna in primo piano
         super.onResume()
         // Assicurati che l'item corretto sia selezionato
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
@@ -108,16 +104,17 @@ class MainActivity : AppCompatActivity() {
                 saveBackupToUri(uri)
             }
         }
-    }
-    private fun saveBackupToUri(uri: Uri) {
-        val db = DatabaseHelper(this).readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_FUMETTI", null)
+    }//se l'utente ha creato un file per il backup, viene richiamato il metodo `saveBackupToUri` per scrivere i dati del database nel file CSV
+
+    private fun saveBackupToUri(uri: Uri) {//esegue un backup dei dati contenuti nella tabella `TABLE_FUMETTI` del database, scrivendoli nel file selezionato dall'utente
+        val db = DatabaseHelper(this).readableDatabase//database aperto in modalità di sola lettura
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_FUMETTI", null)//eseguita una query per recuperare tutti i record dalla tabella dei fumetti
 
         try {
             contentResolver.openOutputStream(uri)?.use { outputStream ->
                 val writer = outputStream.bufferedWriter()
 
-                writer.use {
+                writer.use {//dati estratti dal cursor e scritti nel file CSV, seguendo l'ordine specificato
                     it.write("id,titolo,autore,numero_pagine,stato,collana\n")
                     while (cursor.moveToNext()) {
                         val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
@@ -135,6 +132,6 @@ class MainActivity : AppCompatActivity() {
         } finally {
             cursor.close()
             db.close()
-        }
+        }//cursor e database vengono chiusi dopo l'operazione
     }
 }

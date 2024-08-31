@@ -11,21 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.insubria.fumettapp.accesso.Logout
-
+//gestisce la visualizzazione e l'interazione con una libreria di fumetti organizzata per "collane"
 class LibraryActivity : AppCompatActivity() {
 
-    private lateinit var databaseHelper: DatabaseHelper
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var collanaAdapter: CollanaAdapter
+    private lateinit var databaseHelper: DatabaseHelper//un'istanza di `DatabaseHelper` per interagire con il database locale
+    private lateinit var recyclerView: RecyclerView//RecyclerView` utilizzato per mostrare la lista delle collane o dei fumetti
+    private lateinit var collanaAdapter: CollanaAdapter//Adapter per gestire la visualizzazione delle collane e dei fumetti nel `RecyclerView`
     private lateinit var fumettoAdapter: FumettoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
 
-        databaseHelper = DatabaseHelper(this)
+        databaseHelper = DatabaseHelper(this)//creata un'istanza di `DatabaseHelper`
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)//RecyclerView` viene configurato
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_home
@@ -49,6 +49,7 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
 
+        //creato un adapter per la lista delle collane, e assegnato al `RecyclerView`
         collanaAdapter = CollanaAdapter(emptyList(),
             onItemClick = { collana ->
                 mostraFumettiPerCollana(collana)
@@ -62,12 +63,12 @@ class LibraryActivity : AppCompatActivity() {
         // Carica le collane dal database
         loadCollaneFromDatabase()
     }
-    private fun loadCollaneFromDatabase() {
+    private fun loadCollaneFromDatabase() { //recupera tutte le collane dal database e aggiorna l'adapter
         val collane = databaseHelper.getAllCollane()
         collanaAdapter.updateCollane(collane)
     }
 
-    private fun mostraFumettiPerCollana(collana: String) {
+    private fun mostraFumettiPerCollana(collana: String) { //recupera i fumetti associati a quella collana
         val fumetti = databaseHelper.getFumettiPerCollana(collana)
         fumettoAdapter = FumettoAdapter(fumetti, onItemClick = { fumetto ->
             // Gestisci il click semplice qui, se necessario
@@ -96,7 +97,7 @@ class LibraryActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }//gestisce il risultato delle attività per l'aggiunta o modifica di un fumetto
 
     private fun loadFumettiFromDatabase() {
         val fumetti = databaseHelper.getAllFumetti()
@@ -105,7 +106,6 @@ class LibraryActivity : AppCompatActivity() {
         } else {
             fumettoAdapter = FumettoAdapter(fumetti,
                 onItemClick = { fumetto ->
-                    // Gestisci il click semplice qui, se necessario
                 },
                 onItemLongClick = { fumetto ->
                     mostraDialogoOpzioni(fumetto)
@@ -113,7 +113,7 @@ class LibraryActivity : AppCompatActivity() {
             )
             recyclerView.adapter = fumettoAdapter
         }
-    }
+    }//carica tutti i fumetti dal database e aggiorna il `fumettoAdapter`
 
     private fun mostraDialogoOpzioni(fumetto: Fumetto) {
         val options = arrayOf("Modifica", "Elimina")
@@ -126,7 +126,7 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
         builder.show()
-    }
+    }//opzioni per modificare o eliminare un fumetto
 
     private fun mostraDialogoOpzioniCollana(collana: String) {
         val options = arrayOf("Modifica Collana", "Elimina Collana")
@@ -141,8 +141,7 @@ class LibraryActivity : AppCompatActivity() {
         builder.show()
     }
 
-
-    private fun modificaFumetto(fumetto: Fumetto) {
+    private fun modificaFumetto(fumetto: Fumetto) {//apre AggiungiFumettoActivity
         val intent = Intent(this, AggiungiFumettoActivity::class.java)
         intent.putExtra("fumetto_id", fumetto.id)
         startActivityForResult(intent, REQUEST_CODE_EDIT)
@@ -161,7 +160,7 @@ class LibraryActivity : AppCompatActivity() {
         }
         val dialog = builder.create()
         dialog.show()
-    }
+    }//conferma per eliminare un fumetto
 
     private fun modificaCollana(collana: String) {
         val builder = AlertDialog.Builder(this)
@@ -207,7 +206,7 @@ class LibraryActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
+    override fun onBackPressed() {//gestisce il comportamento del tasto "Indietro"
         if (::fumettoAdapter.isInitialized && recyclerView.adapter == fumettoAdapter) {
             // Se il fumettoAdapter è attualmente mostrato, torna al collanaAdapter
             recyclerView.adapter = collanaAdapter
@@ -222,5 +221,6 @@ class LibraryActivity : AppCompatActivity() {
         private const val REQUEST_CODE_ADD = 1
         private const val REQUEST_CODE_EDIT = 2
     }
+    //contiene costanti utilizzate per identificare le richieste di aggiunta o modifica di un fumetto
 
 }

@@ -149,6 +149,7 @@ class AggiungiFumettoActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Chiude tutte le attività nella parte superiore dello stack e apre MainActivity
         startActivity(intent)
