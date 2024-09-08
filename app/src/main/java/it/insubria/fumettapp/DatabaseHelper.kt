@@ -245,34 +245,66 @@ class DatabaseHelper(context: Context) :
 
         db.beginTransaction()
         try {
-            // 1. Aggiorna il nome nella tabella Collane
-            val contentValues = ContentValues().apply {
-                put(COLUMN_NOME, newName)
-            }
-            val resultCollane = db.update(
-                TABLE_COLLANE,
-                contentValues,
-                "$COLUMN_NOME = ?",
-                arrayOf(oldName)
-            )
-            Log.d("DatabaseHelper", "Update Collane Result: $resultCollane")
+            // 1. Controlla se la nuova collana esiste già
+            val queryCheckNewCollana = "SELECT COUNT(*) FROM $TABLE_COLLANE WHERE $COLUMN_NOME = ?"
+            val cursor = db.rawQuery(queryCheckNewCollana, arrayOf(newName))
+            cursor.moveToFirst()
+            val newCollanaExists = cursor.getInt(0) > 0
+            cursor.close()
 
-            // 2. Aggiorna il nome della collana nella tabella Fumetti
-            val contentValuesFumetti = ContentValues().apply {
-                put(COLUMN_COLLANA, newName)
-            }
-            val resultFumetti = db.update(
-                TABLE_FUMETTI,
-                contentValuesFumetti,
-                "$COLUMN_COLLANA = ?",
-                arrayOf(oldName)
-            )
-            Log.d("DatabaseHelper", "Update Fumetti Result: $resultFumetti")
-            Log.d("DatabaseHelper", "Updating Collane from $oldName to $newName")
+            if (newCollanaExists) {
+                // 2. Se la nuova collana esiste, aggiorna solo i fumetti trasferendoli alla collana esistente
+                val contentValuesFumetti = ContentValues().apply {
+                    put(COLUMN_COLLANA, newName)
+                }
+                val resultFumetti = db.update(
+                    TABLE_FUMETTI,
+                    contentValuesFumetti,
+                    "$COLUMN_COLLANA = ?",
+                    arrayOf(oldName)
+                )
+                Log.d("DatabaseHelper", "Transferred Fumetti from $oldName to existing collana $newName")
 
-            if (resultCollane > 0 && resultFumetti > 0) {
-                db.setTransactionSuccessful()
-                successo = true
+                if (resultFumetti > 0) {
+                    // 3. Dopo aver trasferito i fumetti, rimuovi la vecchia collana
+                    val resultDeleteCollana = db.delete(
+                        TABLE_COLLANE,
+                        "$COLUMN_NOME = ?",
+                        arrayOf(oldName)
+                    )
+                    Log.d("DatabaseHelper", "Deleted old collana $oldName: $resultDeleteCollana rows affected")
+                    db.setTransactionSuccessful()
+                    successo = true
+                }
+            } else {
+                // 4. Se la nuova collana non esiste, aggiorna il nome nella tabella Collane
+                val contentValuesCollane = ContentValues().apply {
+                    put(COLUMN_NOME, newName)
+                }
+                val resultCollane = db.update(
+                    TABLE_COLLANE,
+                    contentValuesCollane,
+                    "$COLUMN_NOME = ?",
+                    arrayOf(oldName)
+                )
+                Log.d("DatabaseHelper", "Updated collana name from $oldName to $newName: $resultCollane rows affected")
+
+                // 5. Aggiorna anche il nome della collana nella tabella Fumetti
+                val contentValuesFumetti = ContentValues().apply {
+                    put(COLUMN_COLLANA, newName)
+                }
+                val resultFumetti = db.update(
+                    TABLE_FUMETTI,
+                    contentValuesFumetti,
+                    "$COLUMN_COLLANA = ?",
+                    arrayOf(oldName)
+                )
+                Log.d("DatabaseHelper", "Updated fumetti to new collana $newName: $resultFumetti rows affected")
+
+                if (resultCollane > 0 && resultFumetti > 0) {
+                    db.setTransactionSuccessful()
+                    successo = true
+                }
             }
         } finally {
             db.endTransaction()
@@ -280,6 +312,7 @@ class DatabaseHelper(context: Context) :
 
         return successo
     }
+
 
     fun aggiungiCollanaSeNecessario(nomeCollana: String) {
         val db = writableDatabase
